@@ -1,0 +1,78 @@
+1 仿优酷架构
+2、数据库设计
+   1、注册 2、登陆 3、上传视频 4、删除视频 5、发布公告
+   1、注册 2、登陆 3、充会员 4、查看视频 5、下载免费视频 6、下载收费视频 7、查看观影记录 8、查看公告
+
+
+userinfo  ---> id,name,password,is_vip,user_type,locked
+movie   --->  id,name,is_free,is_delete,path,user_id,upload_time,md5
+notice   ---->id,name,create_time,user_id
+download_record  ----> id,user_id,movie_id
+
+
+3、搭框架
+
+4、登陆注册
+
+
+1、主键的名称可以随意
+2、添加复杂查询的接口
+3、数据库连接池
+
+   在实际开发中，由于用户会并发访问，所以一条数据
+   库连接肯定不行，一个用户一条连接也不行，
+   资源开销太大
+
+   解决方案：
+   建一堆连接，放在容器中，有用于需要查询，那句从
+   容器中取出一条使用完毕后再放回容器中
+   如果发现容器中没有连接了，就等待一个可用的连接
+
+   创建一个容器
+   先默认的创建一些连接，存储进去
+   当要执行查询时，从容器中pop出一条
+   执行完毕时候，再append回去
+   如果发现容器中为空
+   time.sleep(0.2)
+   过一段时间后检测是否有可用的连接 如果有 拿出来用，没有就继续等
+
+
+4、优酷的构架
+5、数据库的设计
+
+管理员 :登陆 注册 发布公告 锁定和解锁账户 上传视频 删除视频
+admin ID
+      name
+      password
+
+普通用户  登陆 注册 开会员 查看视频 下载视频 查看浏览记录
+user  id
+      name
+      password
+      isvip
+      locked
+
+movie
+        id
+        name
+        user_id
+        up_time
+        size
+        MD5
+        path
+notice
+        id
+        title
+        content
+        send_time
+        user_id
+
+view_record
+        id
+        user_id
+        movie_id
+        view_id
+
+
+6、创建基础目录结构
+7、开始实现功能
